@@ -6,14 +6,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-calculate() {
-throw new Error('Method not implemented.');
-}
-input: any;
+  input: string = '';
+  result: number | null = null;
+  errorMessage: string | null = null;
+
   add(numbers: string): number {
     if (!numbers) return 0;
 
-    let delimiter = /[\n,]/; 
+    let delimiter = /[\n,]/;  // Default delimiter is comma or new line
+
     if (numbers.startsWith('//')) {
       const delimiterEnd = numbers.indexOf('\n');
       delimiter = new RegExp(this.escapeRegExp(numbers.substring(2, delimiterEnd)));
@@ -40,5 +41,15 @@ input: any;
 
   private escapeRegExp(string: string): string {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  calculate() {
+    try {
+      this.result = this.add(this.input);
+      this.errorMessage = null;
+    } catch (error) {
+      this.errorMessage = (error as Error).message;
+      this.result = null;
+    }
   }
 }
